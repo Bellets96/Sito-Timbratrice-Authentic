@@ -25,17 +25,11 @@ function Redirect() {
       setAlertType(data.type);
       setAlert(data.msg);
       if (response.ok) {
-        if (!data.payload) {
-          setTimeout(() => {
-            navigate("/user/login", { state: { userData: data } });
-          }, 1500);
-        } else {
-          setIsLoading(false);
-          login(data.payload);
-          setTimeout(() => {
-            navigate("/");
-          }, 1500);
-        }
+        setIsLoading(false);
+        login(data.payload);
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       } else {
         setIsLoading(false);
       }

@@ -11,6 +11,8 @@ import {
 } from "reactstrap";
 import { useAuth } from "../context/AuthContext";
 
+import config from "../config.json";
+
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
@@ -64,7 +66,7 @@ function Header() {
           ) : (
             <>
               <NavItem>
-                <NavLink className="nav-link" to="/user/login">
+                <NavLink className="nav-link" to={config.discordUri}>
                   Login via discord
                 </NavLink>
               </NavItem>

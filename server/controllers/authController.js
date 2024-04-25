@@ -1,8 +1,4 @@
-import jwt from "jsonwebtoken";
-
 import "dotenv/config";
-
-import { User } from "../models/userModel.js";
 
 import exchangeCodeForToken from "../utils/discord/exchangeCodeForToken.js";
 import getUserData from "../utils/discord/getUserData.js";
@@ -34,6 +30,7 @@ export async function discordAuth(req, res) {
     }
 
     const userData = await getUserData(tokenData);
+
     // Gestione del login
     const loginResult = await handleLogin(userGuild, userData);
 
@@ -46,54 +43,13 @@ export async function discordAuth(req, res) {
           secure: false,
         })
         .status(loginResult.status)
-        .json(loginResult.data.userData);
+        .json(loginResult.data);
     }
   } catch (error) {
     console.error(error);
     return res
       .status(500)
       .json({ type: "danger", msg: "Errore interno al server" });
-  }
-}
-
-export async function postRegistrati(req, res) {
-  const { discordId, username, usernameic } = req.body;
-
-  //Controllo dati del form
-  if (!usernameic) {
-    return res.status(400).json({
-      type: "danger",
-      msg: "Il campo del nome non può essere vuoto!",
-    });
-  }
-
-  const newUser = {
-    discordId,
-    username,
-    usernameic,
-    isAdmin: false,
-  };
-
-  //Inserimento utente nel DB
-  try {
-    const user = await User.create(newUser);
-
-    const payload = {
-      sub: discordId.toString(),
-      isAdmin: false,
-    };
-
-    return res.status(200).json({
-      type: "success",
-      msg: "Registrazione effettuata con successo! Verrai renindirizzato alla homepage",
-      user,
-      payload,
-    });
-  } catch (error) {
-    return res.status(400).json({
-      type: "danger",
-      msg: "Errore durante la registrazione. Riprova.",
-    });
   }
 }
 
