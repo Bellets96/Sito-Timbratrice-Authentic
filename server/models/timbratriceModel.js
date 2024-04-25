@@ -8,6 +8,10 @@ const timbratriceSchema = new Schema(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      required: true,
+    },
     entrata: {
       type: Number,
       required: true,
@@ -39,6 +43,10 @@ const timbratriceSchema = new Schema(
 const tempTimbratriceSchema = new Schema(
   {
     discordId: {
+      type: String,
+      required: true,
+    },
+    role: {
       type: String,
       required: true,
     },

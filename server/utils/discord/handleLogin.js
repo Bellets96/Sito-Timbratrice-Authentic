@@ -5,10 +5,10 @@ import { User } from "../../models/userModel.js";
 import "dotenv/config";
 
 // Funzione per gestire il login dell'utente
-export default async function handleLogin(userGuild, userData) {
-  const usernameic = userGuild.nick;
+export default async function handleLogin(userGuild, userData, userRole) {
   const discordId = userData.id;
   const username = userData.username;
+  const role = userRole;
 
   if (discordId) {
     try {
@@ -18,6 +18,7 @@ export default async function handleLogin(userGuild, userData) {
       if (userExist) {
         const payload = {
           sub: userExist.discordId.toString(),
+          role: role,
           isAdmin: userExist.isAdmin,
         };
         const token = jwt.sign(payload, process.env.JWT_KEY, {
@@ -35,11 +36,12 @@ export default async function handleLogin(userGuild, userData) {
         };
       } else {
         //Altrimenti crea il nuovo utente poi effettua il login
-        let user = { discordId, username, usernameic, isAdmin: false };
+        let user = { discordId, role, username, isAdmin: false };
         const newUser = await User.create(user);
 
         const payload = {
           sub: discordId.toString(),
+          role: role,
           isAdmin: false,
         };
         const token = jwt.sign(payload, process.env.JWT_KEY, {

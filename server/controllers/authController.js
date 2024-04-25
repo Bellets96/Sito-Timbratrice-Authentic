@@ -5,6 +5,15 @@ import getUserData from "../utils/discord/getUserData.js";
 import getUserGuild from "../utils/discord/getUserGuild.js";
 import handleLogin from "../utils/discord/handleLogin.js";
 
+const allowedRoles = [
+  process.env.VVF_ROLE_ID,
+  process.env.ASL_ROLE_ID,
+  process.env.PDS_ROLE_ID,
+  process.env.CC_ROLE_ID,
+  process.env.GDF_ROLE_ID,
+  process.env.ACI_ROLE_ID,
+];
+
 // Funzione per l'autenticazione Discord
 export async function discordAuth(req, res) {
   try {
@@ -20,19 +29,28 @@ export async function discordAuth(req, res) {
 
     const userGuild = await getUserGuild(tokenData);
 
+    let userRole;
+
     if (userGuild.roles) {
-      if (!userGuild.roles.includes(process.env.DISCORD_ROLE_ID)) {
+      const userAllowedRoles = userGuild.roles.filter((roleId) =>
+        allowedRoles.includes(roleId)
+      );
+
+      if (!userAllowedRoles) {
         return res.status(401).json({
           type: "danger",
           msg: "Non risulti essere un membro " + process.enc.CORPO + "!",
         });
       }
-    }
 
+      userRole = userAllowedRoles;
+    }
     const userData = await getUserData(tokenData);
 
+    if (!userRole) return;
+
     // Gestione del login
-    const loginResult = await handleLogin(userGuild, userData);
+    const loginResult = await handleLogin(userGuild, userData, userRole[0]);
 
     if (loginResult) {
       let token = loginResult.data.token;

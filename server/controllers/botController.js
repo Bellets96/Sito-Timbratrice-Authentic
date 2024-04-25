@@ -12,6 +12,7 @@ export async function setTimbraturaBot(req, res) {
     //Dichiara i dati necessari alla timbratura
     let discordId = data.userId;
     let type = data.type;
+    let role = data.role;
     let time = new Date().getTime();
     let fascia = getFasciaOraria(new Date().getHours());
     let moltiplicatoreBonus = 3;
@@ -20,6 +21,7 @@ export async function setTimbraturaBot(req, res) {
     //Crea oggetto per una nuova timbratura temporanea
     let newTimbraturaTemp = {
       discordId,
+      role,
       type,
       time,
       fascia,
@@ -30,6 +32,7 @@ export async function setTimbraturaBot(req, res) {
     //Crea oggetto per una nuova timbratura senza ingresso
     let noEntry = {
       discordId,
+      role,
       entrata: 0,
       uscita: newTimbraturaTemp.time,
       durata: 0,
@@ -41,6 +44,7 @@ export async function setTimbraturaBot(req, res) {
     //Crea oggetto per una nuova timbratura senza uscita
     let noExit = {
       discordId,
+      role,
       entrata: newTimbraturaTemp.time,
       uscita: 0,
       durata: 0,
@@ -123,6 +127,7 @@ export async function setTimbraturaBot(req, res) {
         case oldEntrataTemp && newTimbraturaTemp.type === "uscita": {
           let newTimbraturaFull = {
             discordId,
+            role,
             entrata: oldEntrataTemp.time,
             uscita: newTimbraturaTemp.time,
             durata: newTimbraturaTemp.time - oldEntrataTemp.time,
