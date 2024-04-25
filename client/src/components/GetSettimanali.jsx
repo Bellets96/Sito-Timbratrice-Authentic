@@ -65,7 +65,7 @@ function GetSettimanali({ week, users }) {
     else if (bonus < 7500) return 5000;
     else if (bonus < 10000) return 7500;
     else if (bonus < 12500) return 10000;
-    else if (bonus < 15000) return 125000;
+    else if (bonus < 15000) return 12500;
     else if (bonus < 17500) return 15000;
     else if (bonus < 20000) return 17500;
     else return 20000;
