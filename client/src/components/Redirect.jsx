@@ -38,15 +38,19 @@ function Redirect() {
     fetchDiscordApi(code);
   }, [code, login, navigate]);
 
-  if (isLoading) {
-    return (
-      <div>
-        <Spinner>Loading...</Spinner>Verrai reindirizzato a breve...
+  return (
+    <>
+      <div className="d-flex flex-column align-items-center mt-5">
+        {isLoading ? (
+          <>
+            <Spinner>Loading...</Spinner> Verrai reindirizzato a breve...
+          </>
+        ) : (
+          <Alert color={alertType}>{alert}</Alert>
+        )}
       </div>
-    );
-  } else {
-    return <Alert color={alertType}>{alert}</Alert>;
-  }
+    </>
+  );
 }
 
 export default Redirect;

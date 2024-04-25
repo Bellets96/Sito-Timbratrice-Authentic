@@ -35,11 +35,15 @@ function Logout() {
 
   return (
     <>
-      <Alert color="danger">
-        <Spinner size="sm">Loading...</Spinner>
-        <span> Logout in corso</span>
-      </Alert>
-      {alert && <Alert color={alertType}>{alert}</Alert>}
+      <div className="d-flex flex-column align-items-center mt-5">
+        {alert ? (
+          <Alert color={alertType}>{alert}</Alert>
+        ) : (
+          <Alert color="warning">
+            <Spinner size="sm">Loading...</Spinner> Logout in corso
+          </Alert>
+        )}
+      </div>
     </>
   );
 }
