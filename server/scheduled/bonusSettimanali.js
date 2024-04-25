@@ -57,7 +57,7 @@ export default async function getAllTimbrature() {
         discordId: discordId,
         totaleDurata: totaleDurata,
         week: previousWeek,
-        bonus: risultatoOperazioni / 5000,
+        bonus: risultatoOperazioni / 15000,
       };
 
       try {
