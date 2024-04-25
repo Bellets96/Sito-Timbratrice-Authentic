@@ -38,7 +38,6 @@ cron.schedule("0 4 * * 2", () => {
   // Esegue ogni martedì alle 04:00
   getAllTimbrature();
 });
-getAllTimbrature();
 
 //DB Connection
 mongoose
