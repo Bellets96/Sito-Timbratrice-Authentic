@@ -56,6 +56,11 @@ function Header() {
                   </NavLink>
                 </NavItem>
               )}
+              <NavItem>
+                <NavLink className="nav-link" to="/user/profilo">
+                  Profilo
+                </NavLink>
+              </NavItem>
 
               <NavItem>
                 <NavLink className="nav-link" to="/user/logout">

@@ -5,7 +5,7 @@ import { User } from "../../models/userModel.js";
 import "dotenv/config";
 
 // Funzione per gestire il login dell'utente
-export default async function handleLogin(userGuild, userData, userRole) {
+export default async function handleLogin(userData, userRole) {
   const discordId = userData.id;
   const username = userData.username;
   const role = userRole;
@@ -17,7 +17,9 @@ export default async function handleLogin(userGuild, userData, userRole) {
       //Se l'utente è già registrato effettua il login
       if (userExist) {
         const payload = {
-          sub: userExist.discordId.toString(),
+          discordId: userExist.discordId.toString(),
+          username: username,
+          usernameic: userExist.usernameic,
           role: role,
           isAdmin: userExist.isAdmin,
         };
@@ -40,7 +42,8 @@ export default async function handleLogin(userGuild, userData, userRole) {
         const newUser = await User.create(user);
 
         const payload = {
-          sub: discordId.toString(),
+          discordId: discordId.toString(),
+          username: username,
           role: role,
           isAdmin: false,
         };

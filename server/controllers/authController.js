@@ -50,7 +50,7 @@ export async function discordAuth(req, res) {
     if (!userRole) return;
 
     // Gestione del login
-    const loginResult = await handleLogin(userGuild, userData, userRole[0]);
+    const loginResult = await handleLogin(userData, userRole[0]);
 
     if (loginResult) {
       let token = loginResult.data.token;
