@@ -39,7 +39,7 @@ export async function discordAuth(req, res) {
       if (!userAllowedRoles) {
         return res.status(401).json({
           type: "danger",
-          msg: "Non risulti essere un membro " + process.enc.CORPO + "!",
+          msg: "Non risulti essere membro di alcuna fazione abilitata a questa timbratrice!",
         });
       }
 

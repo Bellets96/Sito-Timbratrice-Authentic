@@ -61,9 +61,13 @@ function Timbrature() {
 
   if (!users) return;
 
-  const userOptions = users.map((user) => (
-    <option key={user._id} value={user.discordId}>
-      {user.usernameic}
+  const usersWithSameRole = users.filter(
+    (singleUser) => singleUser.role === user.role
+  );
+
+  const userOptions = usersWithSameRole.map((singleUser) => (
+    <option key={singleUser._id} value={singleUser.discordId}>
+      {singleUser.usernameic || singleUser.username}
     </option>
   ));
 
@@ -135,7 +139,7 @@ function Timbrature() {
                   <tbody>
                     <GetSettimanali
                       week={selectWeek}
-                      users={users}
+                      users={usersWithSameRole}
                     ></GetSettimanali>
                   </tbody>
                 </Table>

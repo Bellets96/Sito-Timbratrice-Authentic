@@ -111,7 +111,7 @@ function GetSettimanali({ week, users }) {
 
     return (
       <tr key={user._id} className={rowClassName}>
-        <td>{user.usernameic}</td>
+        <td>{user.usernameic || user.username}</td>
         <td>{oreTotali}</td>
         <td>{bonus}€</td>
       </tr>
