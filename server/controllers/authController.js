@@ -12,6 +12,7 @@ const allowedRoles = [
   process.env.CC_ROLE_ID,
   process.env.GDF_ROLE_ID,
   process.env.ACI_ROLE_ID,
+  process.env.GLADIO_ROLE_ID,
 ];
 
 // Funzione per l'autenticazione Discord
