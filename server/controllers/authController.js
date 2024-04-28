@@ -32,6 +32,8 @@ export async function discordAuth(req, res) {
 
     let userRole;
 
+    //Controllo che l'utente abbia i ruoli nel server discord di authentic per proseguire con il login
+
     if (userGuild.roles) {
       const userAllowedRoles = userGuild.roles.filter((roleId) =>
         allowedRoles.includes(roleId)

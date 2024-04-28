@@ -28,7 +28,7 @@ function Redirect() {
         setIsLoading(false);
         login(data.payload);
         setTimeout(() => {
-          navigate("/");
+          navigate("/bollatrice");
         }, 1500);
       } else {
         setIsLoading(false);

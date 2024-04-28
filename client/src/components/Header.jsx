@@ -20,10 +20,10 @@ function Header() {
 
   return (
     <Navbar expand={"lg"} color={"dark"} dark={true}>
-      <NavbarBrand as={Link} to="/">
+      <NavbarBrand as={Link} to="/bollatrice">
         <img
           alt="logo"
-          src="/logo.png"
+          src="logo.png"
           style={{
             height: 60,
           }}
@@ -51,19 +51,22 @@ function Header() {
             <>
               {user.isAdmin && (
                 <NavItem>
-                  <NavLink className="nav-link" to="/user/admin/timbrature">
+                  <NavLink
+                    className="nav-link"
+                    to="/bollatrice/user/admin/timbrature"
+                  >
                     Timbrature
                   </NavLink>
                 </NavItem>
               )}
               <NavItem>
-                <NavLink className="nav-link" to="/user/profilo">
+                <NavLink className="nav-link" to="/bollatrice/user/profilo">
                   Profilo
                 </NavLink>
               </NavItem>
 
               <NavItem>
-                <NavLink className="nav-link" to="/user/logout">
+                <NavLink className="nav-link" to="/bollatrice/user/logout">
                   Logout
                 </NavLink>
               </NavItem>

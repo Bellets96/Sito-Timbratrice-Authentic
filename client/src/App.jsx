@@ -16,12 +16,15 @@ function App() {
         <Header />
         <div>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/redirect" element={<Redirect />} />
-            <Route path="/user/profilo" element={<Profilo />} />
-            <Route path="/user/logout" element={<Logout />} />
-            <Route path="/user/admin/timbrature" element={<Timbrature />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/bollatrice" element={<Home />} />
+            <Route path="/bollatrice/redirect" element={<Redirect />} />
+            <Route path="/bollatrice/user/profilo" element={<Profilo />} />
+            <Route path="/bollatrice/user/logout" element={<Logout />} />
+            <Route
+              path="/bollatrice/user/admin/timbrature"
+              element={<Timbrature />}
+            />
+            <Route path="/bollatrice/*" element={<NotFound />} />
           </Routes>
         </div>
       </BrowserRouter>

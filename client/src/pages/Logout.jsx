@@ -25,7 +25,7 @@ function Logout() {
       if (response.ok) {
         login(null);
         setTimeout(() => {
-          navigate("/");
+          navigate("/bollatrice");
         }, 1000);
       }
     }
