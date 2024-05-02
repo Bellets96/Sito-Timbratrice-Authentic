@@ -42,7 +42,7 @@ function Header() {
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink className="nav-link" to="/">
+            <NavLink className="nav-link" to="/bollatrice">
               Homepage
             </NavLink>
           </NavItem>
