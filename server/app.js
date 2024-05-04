@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cron from "node-cron";
 
+import greenlock from "./utils/greenlock-config.js";
+
 import authRouter from "./routes/authRouter.js";
 import usersRouter from "./routes/usersRouter.js";
 import timbratriceRouter from "./routes/timbratriceRouter.js";
@@ -44,6 +46,7 @@ mongoose
   .connect(MONGODB)
   .then(() => {
     //Listen requests after db connection
+    greenlock.serve(app);
     app.listen(PORT, () => {
       console.log(
         "Connessione a MongoDB avvenuta e server attivo in ascolto sulla porta:",
