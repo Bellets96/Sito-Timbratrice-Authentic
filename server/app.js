@@ -46,10 +46,6 @@ app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/timbratrice", timbratriceRouter);
 
-app.get("/", (req, res) => {
-  res.send("test");
-});
-
 //Scheduled
 cron.schedule("0 4 * * 2", () => {
   // Esegue ogni martedì alle 04:00
