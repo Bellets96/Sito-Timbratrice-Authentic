@@ -46,3 +46,23 @@ export async function getSettimanali(req, res) {
     res.status(500).json({ errorMsg: "Errore interno del server" });
   }
 }
+
+export async function deleteTimbratura(req, res) {
+  const id = req.body;
+  try {
+    const deletedTimbratura = await Timbratrice.findOneAndDelete({ _id: id });
+    const newTimbrature = await Timbratrice.find({
+      discordId: deletedTimbratura.discordId,
+    });
+    res.status(200).json({
+      type: "success",
+      msg: "Timbratura eliminata con successo!",
+      newTimbrature,
+    });
+  } catch (error) {
+    res.status(500).json({
+      type: "danger",
+      msg: "Errore durante l'eliminazione della timbratura",
+    });
+  }
+}

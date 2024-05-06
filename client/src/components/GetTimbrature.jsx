@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Button, Input } from "reactstrap";
+import { Table, Button, Input, Alert } from "reactstrap";
 import config from "../config.json";
 
 import dataConverterToIso from "../js/dataConverterToIso.js";
@@ -10,6 +10,7 @@ function GetTimbrature(discordId) {
   const [timbrature, setTimbrature] = useState(null);
   const [modify, setModify] = useState(false);
   const [key, setKey] = useState(null);
+  const [deleteResponse, setDeleteResponse] = useState(null);
 
   function toggleModify(_id) {
     if (key === _id && modify) {
@@ -66,7 +67,31 @@ function GetTimbrature(discordId) {
   }
 
   async function handleDelete(_id) {
-    console.log(_id);
+    try {
+      const response = await fetch(config.apiUri + "/timbratrice/delete", {
+        method: "DELETE",
+        body: JSON.stringify({ _id }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error("Errore durante la richiesta al server");
+      }
+
+      const responseData = await response.json();
+
+      setDeleteResponse(responseData);
+
+      setTimbrature(responseData.newTimbrature);
+
+      toggleModify(_id);
+
+      setTimeout(() => {
+        setDeleteResponse(null);
+      }, 2000);
+    } catch (error) {
+      console.error("Errore durante la richiesta:", error);
+    }
   }
 
   useEffect(() => {
@@ -138,7 +163,13 @@ function GetTimbrature(discordId) {
               <Button form="entrata" onClick={() => handleModify(_id)}>
                 <i className="bi bi-check-square"></i>
               </Button>
-              <Button type="submit" onClick={() => handleDelete(_id)}>
+              <Button
+                type="submit"
+                onClick={() =>
+                  confirm("Sei sicuro di voler eliminare questa timbratura?") &&
+                  handleDelete(_id)
+                }
+              >
                 <i className="bi bi-trash"></i>
               </Button>
               <Button onClick={() => toggleModify(_id)}>
@@ -164,6 +195,9 @@ function GetTimbrature(discordId) {
 
   return (
     <div>
+      {deleteResponse && (
+        <Alert color={deleteResponse.type}>{deleteResponse.msg}</Alert>
+      )}
       <Table bordered hover responsive striped>
         <thead>
           <tr>
@@ -173,6 +207,7 @@ function GetTimbrature(discordId) {
             <th style={{ width: "20%" }}>Modifica</th>
           </tr>
         </thead>
+
         <tbody>{timbratureUtente}</tbody>
       </Table>
     </div>
