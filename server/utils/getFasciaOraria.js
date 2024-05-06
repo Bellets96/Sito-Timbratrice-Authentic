@@ -7,7 +7,7 @@ export default function getFasciaOraria(ore) {
     case ore >= 14 && ore <= 19:
       fasciaOraria = "B";
       break;
-    case ore >= 20 && ore <= 2:
+    case ore >= 20 || ore <= 2:
       fasciaOraria = "C";
       break;
   }
