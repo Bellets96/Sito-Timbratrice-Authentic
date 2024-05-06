@@ -19,8 +19,8 @@ const allowedRoles = [
 export async function discordAuth(req, res) {
   try {
     const { code } = req.body;
-
     if (!code) {
+      console.log("no code");
       return res
         .status(401)
         .json({ type: "danger", msg: "Non sei autenticato!" });

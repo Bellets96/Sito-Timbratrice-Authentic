@@ -15,17 +15,19 @@ import timbratriceRouter from "./routes/timbratriceRouter.js";
 
 import getAllTimbrature from "./scheduled/bonusSettimanali.js";
 
-const PORT = process.env.PORT || 3000;
+const HTTP_PORT = process.env.HTTP_PORT || 3080;
+const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 const MONGODB = process.env.MONGODB_URI;
 
 const corsOptions = {
   origin: [
-    "https://authenticremastered.it",
+    /*    "https://authenticremastered.it",
     "http://authenticremastered.it",
-    "authenticremastered.it",
+    "authenticremastered.it", */
+    true,
   ],
-  credentials: true,
-  preflightContinue: true,
+  credentials: true /* 
+  preflightContinue: true, */,
   optionsSuccessStatus: 200,
 };
 
@@ -44,6 +46,10 @@ app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/timbratrice", timbratriceRouter);
 
+app.get("/", (req, res) => {
+  res.send("test");
+});
+
 //Scheduled
 cron.schedule("0 4 * * 2", () => {
   // Esegue ogni martedì alle 04:00
@@ -51,22 +57,34 @@ cron.schedule("0 4 * * 2", () => {
 });
 
 const options = {
-  key: fs.readFileSync(process.env.SSL_KEY, "utf-8"),
-  cert: fs.readFileSync(process.env.SSL_CERT, "utf-8"),
+  /*  key: fs.readFileSync(process.env.SSL_KEY, "utf-8"),
+  cert: fs.readFileSync(process.env.SSL_CERT, "utf-8"), */
 };
 
 //DB Connection
 mongoose
   .connect(MONGODB)
   .then(() => {
+    //Avvia server dev
+    app.listen(3000, () => {
+      console.log(
+        "Connessione a MongoDB avvenuta e server attivo in ascolto sulla porta: 3000"
+      );
+    });
+
     // Avvia il server HTTP e HTTPS
-    http.createServer(app).listen(3080),
-      https.createServer(options, app).listen(PORT, () => {
+    /*  http.createServer(app).listen(HTTP_PORT, () => {
+      console.log(
+        "Connessione a MongoDB avvenuta e server HTTP attivo in ascolto sulla porta:",
+        HTTP_PORT
+      );
+    });  ,
+      https.createServer(options, app).listen(HTTPS_PORT, () => {
         console.log(
-          "Connessione a MongoDB avvenuta e server attivo in ascolto sulla porta:",
-          PORT
+          "Connessione a MongoDB avvenuta e server HTTPS attivo in ascolto sulla porta:",
+          HTTPS_PORT
         );
-      });
+      }); */
   })
   .catch((error) => {
     console.log(error);
