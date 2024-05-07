@@ -5,7 +5,9 @@ import convertiDataInUnix from "../utils/convertiDataInUnix.js";
 export async function getTimbrature(req, res) {
   const data = req.body;
   try {
-    const timbrature = await Timbratrice.find({ discordId: data.discordId });
+    const timbrature = await Timbratrice.find({
+      discordId: data.discordId,
+    }).sort({ entrata: 1 });
     res.status(200).json(timbrature);
   } catch (error) {
     res.status(500).json({ errorMsg: "Errore interno del server" });

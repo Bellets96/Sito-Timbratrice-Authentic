@@ -131,9 +131,14 @@ function GetTimbrature(discordId) {
   }
   const minDate = monday.toISOString().slice(0, 16);
 
+  const minDateInMillisec = new Date(minDate).getTime();
+
   const timbratureUtente = timbrature.map(
     ({ _id, entrata, uscita, durata }) => (
-      <tr key={_id}>
+      <tr
+        key={_id}
+        className={entrata < minDateInMillisec ? "table-dark" : "table-light"}
+      >
         {modify && key === _id ? (
           <>
             <td>
@@ -183,9 +188,11 @@ function GetTimbrature(discordId) {
             <td>{dataUnixToLocal(uscita)}</td>
             <td>{millisecondsToHoursAndMinutes(durata)}</td>
             <td>
-              <Button onClick={() => toggleModify(_id)}>
-                <i className="bi bi-pencil-square"></i> Modifica
-              </Button>
+              {entrata > minDateInMillisec && (
+                <Button onClick={() => toggleModify(_id)}>
+                  <i className="bi bi-pencil-square"></i> Modifica
+                </Button>
+              )}
             </td>
           </>
         )}

@@ -37,7 +37,8 @@ const timbratriceSchema = new Schema(
       required: true,
     },
   },
-  { collection: "timbratrice", timestamps: true }
+  { collection: "timbratrice", timestamps: true },
+  { expireAt: { type: Date, expires: 5200000 } }
 );
 
 const tempTimbratriceSchema = new Schema(
@@ -93,7 +94,8 @@ const totaliSettimanaliSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { collection: "totaliSettimanali", timestamps: true }
+  { collection: "totaliSettimanali", timestamps: true },
+  { expireAt: { type: Date, expires: 5200000 } }
 );
 
 export const Timbratrice = mongoose.model("Timbratrice", timbratriceSchema);
