@@ -133,70 +133,75 @@ function GetTimbrature(discordId) {
 
   const minDateInMillisec = new Date(minDate).getTime();
 
+  let min;
+
   const timbratureUtente = timbrature.map(
     ({ _id, entrata, uscita, durata }) => (
-      <tr
-        key={_id}
-        className={entrata < minDateInMillisec ? "table-dark" : "table-light"}
-      >
-        {modify && key === _id ? (
-          <>
-            <td>
-              <Input
-                id={"entrata-" + _id}
-                name="entrata"
-                placeholder="Entrata"
-                type="datetime-local"
-                min={minDate}
-                max={new Date().toISOString().slice(0, 16)}
-                defaultValue={dataConverterToIso(entrata)}
-              />
-            </td>
-            <td>
-              <Input
-                id={"uscita-" + _id}
-                name="uscita"
-                placeholder="Uscita"
-                type="datetime-local"
-                min={minDate}
-                max={new Date().toISOString().slice(0, 16)}
-                defaultValue={dataConverterToIso(uscita)}
-              />
-            </td>
-            <td>{millisecondsToHoursAndMinutes(durata)}</td>
-            <td>
-              <Button form="entrata" onClick={() => handleModify(_id)}>
-                <i className="bi bi-check-square"></i>
-              </Button>
-              <Button
-                type="submit"
-                onClick={() =>
-                  confirm("Sei sicuro di voler eliminare questa timbratura?") &&
-                  handleDelete(_id)
-                }
-              >
-                <i className="bi bi-trash"></i>
-              </Button>
-              <Button onClick={() => toggleModify(_id)}>
-                <i className="bi bi-x-square"></i>
-              </Button>
-            </td>
-          </>
-        ) : (
-          <>
-            <td>{dataUnixToLocal(entrata)}</td>
-            <td>{dataUnixToLocal(uscita)}</td>
-            <td>{millisecondsToHoursAndMinutes(durata)}</td>
-            <td>
-              {entrata > minDateInMillisec && (
-                <Button onClick={() => toggleModify(_id)}>
-                  <i className="bi bi-pencil-square"></i> Modifica
+      <>
+        {entrata > 0
+          ? (min = entrata < minDateInMillisec)
+          : (min = uscita < minDateInMillisec)}
+        <tr key={_id} className={min ? "table-dark" : "table-light"}>
+          {modify && key === _id ? (
+            <>
+              <td>
+                <Input
+                  id={"entrata-" + _id}
+                  name="entrata"
+                  placeholder="Entrata"
+                  type="datetime-local"
+                  min={minDate}
+                  max={new Date().toISOString().slice(0, 16)}
+                  defaultValue={dataConverterToIso(entrata)}
+                />
+              </td>
+              <td>
+                <Input
+                  id={"uscita-" + _id}
+                  name="uscita"
+                  placeholder="Uscita"
+                  type="datetime-local"
+                  min={minDate}
+                  max={new Date().toISOString().slice(0, 16)}
+                  defaultValue={dataConverterToIso(uscita)}
+                />
+              </td>
+              <td>{millisecondsToHoursAndMinutes(durata)}</td>
+              <td>
+                <Button form="entrata" onClick={() => handleModify(_id)}>
+                  <i className="bi bi-check-square"></i>
                 </Button>
-              )}
-            </td>
-          </>
-        )}
-      </tr>
+                <Button
+                  type="submit"
+                  onClick={() =>
+                    confirm(
+                      "Sei sicuro di voler eliminare questa timbratura?"
+                    ) && handleDelete(_id)
+                  }
+                >
+                  <i className="bi bi-trash"></i>
+                </Button>
+                <Button onClick={() => toggleModify(_id)}>
+                  <i className="bi bi-x-square"></i>
+                </Button>
+              </td>
+            </>
+          ) : (
+            <>
+              <td>{dataUnixToLocal(entrata)}</td>
+              <td>{dataUnixToLocal(uscita)}</td>
+              <td>{millisecondsToHoursAndMinutes(durata)}</td>
+              <td>
+                {!min && (
+                  <Button onClick={() => toggleModify(_id)}>
+                    <i className="bi bi-pencil-square"></i> Modifica
+                  </Button>
+                )}
+              </td>
+            </>
+          )}
+        </tr>
+      </>
     )
   );
 
