@@ -41,11 +41,6 @@ function Header() {
               Authentic Remastered
             </NavLink>
           </NavItem>
-          <NavItem>
-            <NavLink className="nav-link" to="/bollatrice">
-              Homepage
-            </NavLink>
-          </NavItem>
 
           {user ? (
             <>

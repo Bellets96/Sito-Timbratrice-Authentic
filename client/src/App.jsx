@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import config from "./config.json";
 
 //Pages & Components
 import Header from "./components/Header";
@@ -16,7 +17,10 @@ function App() {
         <Header />
         <div>
           <Routes>
-            <Route path="/bollatrice" element={<Home />} />
+            <Route
+              path="/bollatrice"
+              element={<Home to={config.discordUri} />}
+            />
             <Route path="/bollatrice/redirect" element={<Redirect />} />
             <Route path="/bollatrice/user/profilo" element={<Profilo />} />
             <Route path="/bollatrice/user/logout" element={<Logout />} />
@@ -24,7 +28,7 @@ function App() {
               path="/bollatrice/user/admin/timbrature"
               element={<Timbrature />}
             />
-            <Route path="/bollatrice/*" element={<NotFound />} />
+            <Route path="/*" element={<NotFound />} />
           </Routes>
         </div>
       </BrowserRouter>

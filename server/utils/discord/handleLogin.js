@@ -33,7 +33,7 @@ export default async function handleLogin(userData, userRole) {
             payload,
             token,
             type: "success",
-            msg: "Login effettuato con successo! Verrai reindirizzato alla homepage.",
+            msg: "Login effettuato con successo! Verrai reindirizzato alla pagina profilo.",
           },
         };
       } else {
