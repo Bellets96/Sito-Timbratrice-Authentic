@@ -102,7 +102,7 @@ export async function setTimbraturaBot(req, res) {
 
         case oldEntrataTemp &&
           newTimbraturaTemp.type === "uscita" &&
-          newTimbraturaTemp.time - newTimbraturaTemp.time >= maxTurno: {
+          newTimbraturaTemp.time - oldEntrataTemp.time >= maxTurno: {
           await Timbratrice.create([noExit, noEntry]);
 
           return res

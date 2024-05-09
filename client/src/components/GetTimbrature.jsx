@@ -5,6 +5,7 @@ import config from "../config.json";
 import dataConverterToIso from "../js/dataConverterToIso.js";
 import dataUnixToLocal from "../js/dataUnixToLocal.js";
 import millisecondsToHoursAndMinutes from "../js/millisecondsToHoursAndMinutes.js";
+import getMinDate from "../js/getMinDate.js";
 
 function GetTimbrature(discordId) {
   const [timbrature, setTimbrature] = useState(null);
@@ -116,22 +117,7 @@ function GetTimbrature(discordId) {
     return;
   }
 
-  const today = new Date();
-  const currentDayOfWeek = today.getDay();
-  let monday;
-
-  if (currentDayOfWeek === 1) {
-    // Se oggi è lunedì, calcola il lunedì precedente
-    monday = new Date(today);
-    monday.setDate(today.getDate() - 7); // Sottrai una settimana
-  } else {
-    // Altrimenti, calcola la data del lunedì di questa settimana
-    monday = new Date(today);
-    monday.setDate(today.getDate() - currentDayOfWeek + 1);
-  }
-  const minDate = monday.toISOString().slice(0, 16);
-
-  const minDateInMillisec = new Date(minDate).getTime();
+  const minDateInMillisec = new Date(getMinDate()).getTime();
 
   let min;
 
@@ -150,7 +136,7 @@ function GetTimbrature(discordId) {
                   name="entrata"
                   placeholder="Entrata"
                   type="datetime-local"
-                  min={minDate}
+                  min={getMinDate()}
                   max={new Date().toISOString().slice(0, 16)}
                   defaultValue={dataConverterToIso(entrata)}
                 />
@@ -161,17 +147,19 @@ function GetTimbrature(discordId) {
                   name="uscita"
                   placeholder="Uscita"
                   type="datetime-local"
-                  min={minDate}
+                  min={getMinDate()}
                   max={new Date().toISOString().slice(0, 16)}
                   defaultValue={dataConverterToIso(uscita)}
                 />
               </td>
               <td>{millisecondsToHoursAndMinutes(durata)}</td>
               <td>
-                <Button form="entrata" onClick={() => handleModify(_id)}>
+                <Button color="success" onClick={() => handleModify(_id)}>
                   <i className="bi bi-check-square"></i>
                 </Button>
                 <Button
+                  color="danger"
+                  className="mx-1"
                   type="submit"
                   onClick={() =>
                     confirm(
@@ -193,7 +181,7 @@ function GetTimbrature(discordId) {
               <td>{millisecondsToHoursAndMinutes(durata)}</td>
               <td>
                 {!min && (
-                  <Button onClick={() => toggleModify(_id)}>
+                  <Button color="primary" onClick={() => toggleModify(_id)}>
                     <i className="bi bi-pencil-square"></i> Modifica
                   </Button>
                 )}

@@ -96,7 +96,7 @@ function Timbrature() {
                     setSelectUser(e.target.value);
                   }}
                 >
-                  <option value="null"></option>
+                  <option value={null}></option>
                   {userOptions}
                 </Input>
               </FormGroup>

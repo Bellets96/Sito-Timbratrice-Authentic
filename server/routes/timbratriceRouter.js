@@ -6,6 +6,7 @@ import {
   modifyTimbrature,
   getSettimanali,
   deleteTimbratura,
+  addTimbratura,
 } from "../controllers/timbratriceController.js";
 
 import { setTimbraturaBot } from "../controllers/botController.js";
@@ -23,5 +24,7 @@ router.put("/modify", modifyTimbrature);
 router.get("/settimanali", getSettimanali);
 
 router.delete("/delete", deleteTimbratura);
+
+router.post("/add", addTimbratura);
 
 export default router;

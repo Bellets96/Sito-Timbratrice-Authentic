@@ -1,5 +1,8 @@
 import { Timbratrice, TotaliSettimanali } from "../models/timbratriceModel.js";
+import { User } from "../models/userModel.js";
 
+import getFasciaOraria from "../utils/getFasciaOraria.js";
+import getCurrentWeekNumber from "../utils/getCurrentWeekNumber.js";
 import convertiDataInUnix from "../utils/convertiDataInUnix.js";
 
 export async function getTimbrature(req, res) {
@@ -65,6 +68,69 @@ export async function deleteTimbratura(req, res) {
     res.status(500).json({
       type: "danger",
       msg: "Errore durante l'eliminazione della timbratura",
+    });
+  }
+}
+
+export async function addTimbratura(req, res) {
+  const { userId, entrataValue, uscitaValue } = req.body;
+  const maxTurno = 6 * 60 * 60 * 1000; //6 ore
+  const time = new Date(entrataValue).getTime();
+
+  try {
+    const user = await User.find({ discordId: userId });
+
+    const userRole = user[0].role;
+
+    let moltiplicatoreBonus = 3;
+    let fascia = getFasciaOraria(new Date(entrataValue).getHours());
+    let entrata = convertiDataInUnix(entrataValue);
+    let uscita = convertiDataInUnix(uscitaValue);
+
+    //Controlla se presente una timbratura con la stessa fascia oraria
+    let timbraturaInFascia = await Timbratrice.findOne({
+      discordId: userId,
+      fascia,
+    }).sort({ createdAt: -1 });
+
+    //Se vi è una timbratura con la stessa fascia oraria controlla se quella timbratura è dello stesso giorno
+    if (timbraturaInFascia) {
+      if (
+        (timbraturaInFascia.entrata != 0 &&
+          timbraturaInFascia.entrata >= time - maxTurno * 2) ||
+        (timbraturaInFascia.uscita != 0 &&
+          timbraturaInFascia.uscita >= time - maxTurno * 2)
+      ) {
+        //Se è dello stesso giorno riduce il moltiplicatore sennò rimane invariato
+        if (timbraturaInFascia.moltiplicatoreBonus > 1) {
+          moltiplicatoreBonus = timbraturaInFascia.moltiplicatoreBonus - 1;
+        } else {
+          moltiplicatoreBonus = timbraturaInFascia.moltiplicatoreBonus;
+        }
+      }
+    }
+
+    let newTimbratura = {
+      discordId: userId,
+      role: userRole,
+      entrata: entrata,
+      uscita: uscita,
+      durata: uscita - entrata,
+      fascia: fascia,
+      moltiplicatoreBonus: moltiplicatoreBonus,
+      week: getCurrentWeekNumber(),
+    };
+
+    await Timbratrice.create(newTimbratura);
+
+    return res
+      .status(200)
+      .json({ type: "success", msg: "Timbratura inserita con successo!" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      type: "danger",
+      msg: "Errore durante la creazione della timbratura",
     });
   }
 }

@@ -7,8 +7,12 @@ import {
   Input,
   Button,
   Spinner,
+  Row,
+  Col,
 } from "reactstrap";
 import { useState } from "react";
+
+import Admin from "../components/Admin";
 
 import config from "../config.json";
 
@@ -46,41 +50,44 @@ function Profilo() {
     <>
       {user ? (
         <>
-          <h4 className="d-flex text-center m-3">
-            Benvenuto {user.usernameic || user.username} nel pannello utente.
-            Qui di seguito potrai modificare i dati relativi al tuo profilo.
-          </h4>
-          <Form
-            className="m-5"
-            style={{ minWidth: "300px", maxWidth: "30%" }}
-            onSubmit={(e) => handleSubmit(e)}
-          >
-            <FormGroup floating>
-              <Input
-                id="usernameic"
-                name="usernameic"
-                placeholder="Nome e Cognome IC"
-                type="text"
-              />
-              <Label for="usernameic">Nome e Cognome IC</Label>
-            </FormGroup>
-            {!loading ? (
-              <>
-                <Button type="submit" color="success">
-                  Salva modifiche
-                </Button>
-                <Alert className="mt-3" color={alertType}>
-                  {" "}
-                  {alert}
-                </Alert>
-              </>
-            ) : (
-              <Button type="submit" disabled color="success">
-                <Spinner size="sm">Loading...</Spinner>
-                Modifiche in corso
-              </Button>
-            )}
-          </Form>
+          <Row className="mt-3" style={{ margin: "0", padding: "10px" }}>
+            <Col className="mx-3" style={{ minWidth: "300px" }}>
+              <h4 className="text-center mb-5">
+                Benvenuto {user.usernameic || user.username} nel pannello
+                utente. Qui di seguito potrai modificare i dati relativi al tuo
+                profilo.
+              </h4>
+              <Form onSubmit={(e) => handleSubmit(e)}>
+                <FormGroup floating>
+                  <Input
+                    id="usernameic"
+                    name="usernameic"
+                    placeholder="Nome e Cognome IC"
+                    type="text"
+                  />
+                  <Label for="usernameic">Nome e Cognome IC</Label>
+                </FormGroup>
+                {!loading ? (
+                  <>
+                    <Button type="submit" color="success">
+                      Salva modifiche
+                    </Button>
+                    <Alert className="mt-3" color={alertType}>
+                      {alert}
+                    </Alert>
+                  </>
+                ) : (
+                  <Button type="submit" disabled color="success">
+                    <Spinner size="sm">Loading...</Spinner>
+                    Modifiche in corso
+                  </Button>
+                )}
+              </Form>
+            </Col>
+            <Col style={{ minWidth: "300px" }}>
+              {user.isAdmin && <Admin></Admin>}
+            </Col>
+          </Row>
         </>
       ) : (
         <div className="d-flex flex-column align-items-center mt-5">

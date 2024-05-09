@@ -61,7 +61,7 @@ function Header() {
               )}
               <NavItem>
                 <NavLink className="nav-link" to="/bollatrice/user/profilo">
-                  Profilo
+                  Dashboard Profilo
                 </NavLink>
               </NavItem>
 
