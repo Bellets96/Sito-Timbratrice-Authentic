@@ -4,6 +4,7 @@ import { User } from "../models/userModel.js";
 import getFasciaOraria from "../utils/getFasciaOraria.js";
 import getCurrentWeekNumber from "../utils/getCurrentWeekNumber.js";
 import convertiDataInUnix from "../utils/convertiDataInUnix.js";
+import getTotaleTimbratureUtente from "../utils/getTotaleTimbratureUtente.js";
 
 export async function getTimbrature(req, res) {
   const data = req.body;
@@ -34,6 +35,9 @@ export async function modifyTimbrature(req, res) {
         new: true,
       }
     );
+
+    getTotaleTimbratureUtente(timbratura);
+
     res.status(200).json(timbratura);
   } catch (error) {
     res.status(500).json({ errorMsg: "Errore interno del server" });
@@ -55,10 +59,30 @@ export async function getSettimanali(req, res) {
 export async function deleteTimbratura(req, res) {
   const id = req.body;
   try {
+    //Trova ed elimina la timbratura
     const deletedTimbratura = await Timbratrice.findOneAndDelete({ _id: id });
+
+    // Trova e aggiorna i totali settimanali
+    const totaliSettimanali = await TotaliSettimanali.findOne({
+      discordId: deletedTimbratura.discordId,
+      week: deletedTimbratura.week,
+    });
+
+    if (totaliSettimanali) {
+      // Sottrai i valori della timbratura eliminata dai totali settimanali
+      totaliSettimanali.totaleDurata -= deletedTimbratura.durata;
+      totaliSettimanali.bonus -=
+        (deletedTimbratura.durata * deletedTimbratura.moltiplicatoreBonus) /
+        15000;
+
+      // Salva il documento aggiornato dei totali settimanali
+      await totaliSettimanali.save();
+    }
+
     const newTimbrature = await Timbratrice.find({
       discordId: deletedTimbratura.discordId,
     });
+
     res.status(200).json({
       type: "success",
       msg: "Timbratura eliminata con successo!",
@@ -73,14 +97,14 @@ export async function deleteTimbratura(req, res) {
 }
 
 export async function addTimbratura(req, res) {
-  const { userId, entrataValue, uscitaValue } = req.body;
+  const { user, entrataValue, uscitaValue } = req.body;
   const maxTurno = 6 * 60 * 60 * 1000; //6 ore
   const time = new Date(entrataValue).getTime();
 
   try {
-    const user = await User.find({ discordId: userId });
+    const userData = await User.find({ discordId: user.discordId });
 
-    const userRole = user[0].role;
+    const userRole = userData[0].role;
 
     let moltiplicatoreBonus = 3;
     let fascia = getFasciaOraria(new Date(entrataValue).getHours());
@@ -89,7 +113,7 @@ export async function addTimbratura(req, res) {
 
     //Controlla se presente una timbratura con la stessa fascia oraria
     let timbraturaInFascia = await Timbratrice.findOne({
-      discordId: userId,
+      discordId: user.discordId,
       fascia,
     }).sort({ createdAt: -1 });
 
@@ -111,7 +135,7 @@ export async function addTimbratura(req, res) {
     }
 
     let newTimbratura = {
-      discordId: userId,
+      discordId: user.discordId,
       role: userRole,
       entrata: entrata,
       uscita: uscita,
@@ -121,7 +145,9 @@ export async function addTimbratura(req, res) {
       week: getCurrentWeekNumber(),
     };
 
-    await Timbratrice.create(newTimbratura);
+    const timbratura = await Timbratrice.create(newTimbratura);
+
+    getTotaleTimbratureUtente(timbratura);
 
     return res
       .status(200)

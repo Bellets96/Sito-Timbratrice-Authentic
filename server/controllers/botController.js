@@ -2,6 +2,7 @@ import { Timbratrice, TimbratriceTemp } from "../models/timbratriceModel.js";
 
 import getFasciaOraria from "../utils/getFasciaOraria.js";
 import getCurrentWeekNumber from "../utils/getCurrentWeekNumber.js";
+import getTotaleTimbratureUtente from "../utils/getTotaleTimbratureUtente.js";
 
 export async function setTimbraturaBot(req, res) {
   const data = req.body;
@@ -136,7 +137,9 @@ export async function setTimbraturaBot(req, res) {
             week,
           };
 
-          await Timbratrice.create(newTimbraturaFull);
+          const timbratura = await Timbratrice.create(newTimbraturaFull);
+
+          getTotaleTimbratureUtente(timbratura);
 
           return res.status(200).json("Timbratura completa effettuata!");
         }

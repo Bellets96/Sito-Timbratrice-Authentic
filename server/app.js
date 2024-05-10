@@ -7,13 +7,10 @@ import "dotenv/config";
 import cors from "cors";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-import cron from "node-cron";
 
 import authRouter from "./routes/authRouter.js";
 import usersRouter from "./routes/usersRouter.js";
 import timbratriceRouter from "./routes/timbratriceRouter.js";
-
-import getAllTimbrature from "./scheduled/bonusSettimanali.js";
 
 const HTTP_PORT = process.env.HTTP_PORT || 3080;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
@@ -45,12 +42,6 @@ app.use(cookieParser());
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/timbratrice", timbratriceRouter);
-
-//Scheduled
-cron.schedule("0 4 * * 2", () => {
-  // Esegue ogni martedì alle 04:00
-  getAllTimbrature();
-});
 
 const options = {
   /*  key: fs.readFileSync(process.env.SSL_KEY, "utf-8"),

@@ -20,13 +20,22 @@ function Admin() {
   async function handleAddTimbratura(e, user) {
     e.preventDefault();
 
-    const userId = user;
     const entrataValue = e.target.form.entrata.value;
     const uscitaValue = e.target.form.uscita.value;
-    const userData = { userId, entrataValue, uscitaValue };
+    const userData = { user, entrataValue, uscitaValue };
 
     if (!entrataValue || !uscitaValue) {
       setAlert("Le date devono essere entrambe inserite!");
+      setAlertType("danger");
+      setTimeout(() => {
+        setAlert("");
+        setAlertType("");
+      }, 2000);
+      return;
+    }
+
+    if (uscitaValue < entrataValue) {
+      setAlert("L'uscita non può essere antecedente all'entrata!");
       setAlertType("danger");
       setTimeout(() => {
         setAlert("");
