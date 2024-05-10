@@ -67,7 +67,6 @@ function GetSettimanali({ week, users }) {
     if (!minHours) {
       return 0;
     }
-    console.log(bonus);
     let increment;
 
     if (bonus < 500) increment = 0;

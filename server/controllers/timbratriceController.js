@@ -22,28 +22,51 @@ export async function modifyTimbrature(req, res) {
   const data = req.body;
   let entrataUnix = convertiDataInUnix(data.entrata);
   let uscitaUnix = convertiDataInUnix(data.uscita);
+  let durataUnix = uscitaUnix - entrataUnix;
 
   try {
-    const timbratura = await Timbratrice.findOneAndUpdate(
+    const oldTimbratura = await Timbratrice.find({ _id: data._id });
+    const timbratura = oldTimbratura[0];
+
+    const modifiedTimbratura = await Timbratrice.findOneAndUpdate(
       { _id: data._id },
       {
         entrata: entrataUnix,
         uscita: uscitaUnix,
-        durata: uscitaUnix - entrataUnix,
+        durata: durataUnix,
       },
-      {
-        new: true,
-      }
+      { new: true }
     );
+    // Trova e aggiorna i totali settimanali
+    const totaliSettimanali = await TotaliSettimanali.findOne({
+      discordId: timbratura.discordId,
+      week: timbratura.week,
+    });
 
-    getTotaleTimbratureUtente(timbratura);
+    if (totaliSettimanali) {
+      // Sottrai i valori della timbratura vecchia dai totali settimanali e aggiungi quelli della timbratura modificata
+      totaliSettimanali.totaleDurata -= timbratura.durata;
+      totaliSettimanali.totaleDurata += durataUnix;
+      totaliSettimanali.bonus -=
+        (timbratura.durata * timbratura.moltiplicatoreBonus) / 15000;
+      totaliSettimanali.bonus +=
+        (durataUnix * timbratura.moltiplicatoreBonus) / 15000;
 
-    res.status(200).json(timbratura);
+      // Salva il documento aggiornato dei totali settimanali
+      await totaliSettimanali.save();
+    } else {
+      await TotaliSettimanali.create({
+        discordId: timbratura.discordId,
+        week: timbratura.week,
+        totaleDurata: durataUnix,
+        bonus: (durataUnix * timbratura.moltiplicatoreBonus) / 15000,
+      });
+    }
+
+    res.status(200).json(modifiedTimbratura);
   } catch (error) {
     res.status(500).json({ errorMsg: "Errore interno del server" });
   }
-
-  res.status(200);
 }
 
 export async function getSettimanali(req, res) {
