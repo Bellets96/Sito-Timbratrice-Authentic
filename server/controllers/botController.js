@@ -17,7 +17,7 @@ export async function setTimbraturaBot(req, res) {
     let time = new Date().getTime();
     let fascia = getFasciaOraria(new Date().getHours());
     let moltiplicatoreBonus = 3;
-    let week = getCurrentWeekNumber();
+    let week = getCurrentWeekNumber(new Date());
 
     //Crea oggetto per una nuova timbratura temporanea
     let newTimbraturaTemp = {

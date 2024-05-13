@@ -165,7 +165,7 @@ export async function addTimbratura(req, res) {
       durata: uscita - entrata,
       fascia: fascia,
       moltiplicatoreBonus: moltiplicatoreBonus,
-      week: getCurrentWeekNumber(),
+      week: getCurrentWeekNumber(new Date()),
     };
 
     const timbratura = await Timbratrice.create(newTimbratura);

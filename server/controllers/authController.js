@@ -13,6 +13,9 @@ const allowedRoles = [
   process.env.GDF_ROLE_ID,
   process.env.ACI_ROLE_ID,
   process.env.GLADIO_ROLE_ID,
+  process.env.ARMERIA_ROLE_ID,
+  process.env.PROCURA_ROLE_ID,
+  process.env.TRIBUNALE_ROLE_ID,
 ];
 
 // Funzione per l'autenticazione Discord
@@ -52,7 +55,7 @@ export async function discordAuth(req, res) {
     if (!userRole) return;
 
     // Gestione del login
-    const loginResult = await handleLogin(userData, userRole[0]);
+    const loginResult = await handleLogin(userData, userRole);
 
     if (loginResult) {
       let token = loginResult.data.token;
