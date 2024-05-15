@@ -9,7 +9,7 @@ const userSchema = new Schema(
       required: true,
     },
     role: {
-      type: String,
+      type: Array,
       required: true,
     },
     username: {

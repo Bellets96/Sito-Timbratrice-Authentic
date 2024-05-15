@@ -13,9 +13,13 @@ export default async function handleLogin(userData, userRole) {
   if (discordId) {
     try {
       const userExist = await User.findOne({ discordId: discordId });
-
+      console.log(role);
       //Se l'utente è già registrato effettua il login
       if (userExist) {
+        if (userExist.role != role) {
+          await User.findOneAndUpdate({ discordId: discordId }, { role: role });
+        }
+
         const payload = {
           discordId: userExist.discordId.toString(),
           username: username,
