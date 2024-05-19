@@ -10,10 +10,17 @@ export default async function handleLogin(userData, userRole) {
   const username = userData.username;
   const role = userRole;
 
+  if (role === "" || null) {
+    return {
+      status: 400,
+      data: { type: "danger", msg: "Non hai ruoli autorizzati!" },
+    };
+  }
+
   if (discordId) {
     try {
       const userExist = await User.findOne({ discordId: discordId });
-      console.log(role);
+
       //Se l'utente è già registrato effettua il login
       if (userExist) {
         if (userExist.role != role) {

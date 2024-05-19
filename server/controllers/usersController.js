@@ -54,6 +54,13 @@ export async function deleteUser(req, res) {
 export async function setAdmin(req, res) {
   const { user, isAdmin } = req.body;
 
+  if (user.discordId === process.env.ID_BELLETS) {
+    return res.status(400).json({
+      type: "danger",
+      msg: "Vuoi davvere togliere l'admin allo sviluppatore del sito?",
+    });
+  }
+
   try {
     const userData = await User.findOneAndUpdate(
       { discordId: user.discordId },

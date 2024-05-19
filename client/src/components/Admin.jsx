@@ -115,8 +115,12 @@ function Admin() {
           setAlertType("");
         }, 2000);
       } else {
-        setAlert("Errore durante l'aggiornamento dello stato da Admin");
-        setAlertType("danger");
+        setAlert(data.msg);
+        setAlertType(data.type);
+        setTimeout(() => {
+          setAlert("");
+          setAlertType("");
+        }, 5000);
       }
     } catch (error) {
       console.error(error);
@@ -186,16 +190,20 @@ function Admin() {
     }
   }, [selectUser]);
 
-  const usersWithSameRole = users.filter((singleUser) => {
-    // Assicurati che entrambi, user.role e singleUser.role, siano array
-    const userRoles = Array.isArray(user.role) ? user.role : [user.role];
-    const singleUserRoles = Array.isArray(singleUser.role)
-      ? singleUser.role
-      : [singleUser.role];
+  const usersWithSameRole =
+    //Se l'utente che effettua la richiesta è Bellets (Dev) allora mostra tutti gli utenti, sennò solo quelli con lo stesso ruolo dell'utente
+    user.discordId === config.idBellets
+      ? users
+      : users.filter((singleUser) => {
+          // Assicurati che entrambi, user.role e singleUser.role, siano array
+          const userRoles = Array.isArray(user.role) ? user.role : [user.role];
+          const singleUserRoles = Array.isArray(singleUser.role)
+            ? singleUser.role
+            : [singleUser.role];
 
-    // Controlla se ci sia almeno una corrispondenza tra gli array
-    return singleUserRoles.some((role) => userRoles.includes(role));
-  });
+          // Controlla se ci sia almeno una corrispondenza tra gli array
+          return singleUserRoles.some((role) => userRoles.includes(role));
+        });
 
   const userOptions = usersWithSameRole.map((singleUser) => (
     <option key={singleUser._id} value={singleUser.discordId}>
