@@ -46,9 +46,9 @@ export async function discordAuth(req, res) {
           type: "danger",
           msg: "Non risulti essere membro di alcuna fazione abilitata a questa timbratrice!",
         });
+      } else {
+        userRole = userAllowedRoles;
       }
-
-      userRole = userAllowedRoles;
     }
     const userData = await getUserData(tokenData);
 

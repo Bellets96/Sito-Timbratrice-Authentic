@@ -10,7 +10,7 @@ export default async function handleLogin(userData, userRole) {
   const username = userData.username;
   const role = userRole;
 
-  if (role === "" || null) {
+  if (role.length === 0) {
     return {
       status: 400,
       data: { type: "danger", msg: "Non hai ruoli autorizzati!" },
