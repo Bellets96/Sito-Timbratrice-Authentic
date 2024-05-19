@@ -153,7 +153,6 @@ export async function setTimbraturaBot(req, res) {
         }
       }
     } catch (error) {
-      console.log(error);
       res.status(500).json("Errore durante la richiesta al server");
     }
   } else {

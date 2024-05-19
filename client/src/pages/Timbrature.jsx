@@ -1,4 +1,13 @@
-import { Row, Col, FormGroup, Label, Input, Alert, Table } from "reactstrap";
+import {
+  Row,
+  Col,
+  FormGroup,
+  Label,
+  Input,
+  Alert,
+  Table,
+  Spinner,
+} from "reactstrap";
 import { useEffect, useState } from "react";
 import config from "../config.json";
 import GetTimbrature from "../components/GetTimbrature";
@@ -6,7 +15,7 @@ import { useAuth } from "../context/AuthContext";
 import GetSettimanali from "../components/GetSettimanali";
 
 function Timbrature() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [users, setUsers] = useState([]);
   const [selectUser, setSelectUser] = useState(null);
   const [selectWeek, setSelectWeek] = useState(null);
@@ -59,7 +68,17 @@ function Timbrature() {
     </option>
   ));
 
-  if (!users) return;
+  if (loading) {
+    return <Spinner>Loading...</Spinner>;
+  }
+
+  if (!user) {
+    return (
+      <Alert color="danger">
+        Effettua il login prima di accedere a questa pagina!
+      </Alert>
+    );
+  }
 
   const usersWithSameRole =
     //Se l'utente che effettua la richiesta è Bellets (Dev) allora mostra tutti gli utenti, sennò solo quelli con lo stesso ruolo dell'utente
